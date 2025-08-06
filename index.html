@@ -2,241 +2,175 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Sales Program - Automatic Product Adding and Return</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Art Gallery</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      background-color: #f7f7f7;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: #fff;
-      padding: 20px 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+    /* Reset some default styles */
+    * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f4f4f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #222;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    header h1 {
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .gallery-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .art-card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .art-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+    }
+
+    .art-image {
+      width: 100%;
+      display: block;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .art-info {
+      padding: 15px 20px;
+    }
+
+    .art-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #222;
+    }
+
+    .art-artist {
+      font-size: 1rem;
+      font-style: italic;
+      color: #666;
       margin-bottom: 10px;
     }
 
-    button {
-      padding: 10px 20px;
-      margin-right: 10px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      color: white;
-      transition: background-color 0.3s ease;
+    .art-description {
+      font-size: 0.9rem;
+      color: #555;
     }
 
-    /* Add Button (Green) */
-    button#addBtn {
-      font-weight: bold;
-      background-color: #4CAF50;
-    }
-    button#addBtn:hover {
-      background-color: #45A049;
-    }
-
-    /* Return Product Button (Orange) */
-    button#returnBtn {
-      font-weight: bold;
-      background-color: #FF9800;
-    }
-    button#returnBtn:hover {
-      background-color: #FB8C00;
-    }
-
-    /* Reset Button (Gray) */
-    button#resetBtn {
-      font-weight: bold;
-      background-color: #BDBDBD;
-      color: #333;
-    }
-    button#resetBtn:hover {
-      background-color: #9E9E9E;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 15px;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 12px 15px;
+    footer {
       text-align: center;
+      padding: 20px 10px;
+      background: #222;
+      color: #ddd;
+      margin-top: 60px;
+      font-size: 0.9rem;
     }
 
-    th {
-      background-color: #333;
-      color: white;
-    }
-
-    tbody tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    tfoot td {
-      font-weight: bold;
-      font-size: 18px;
-      text-align: right;
-      padding-right: 20px;
-    }
-
-    .not-found {
-      color: red;
-      margin-bottom: 16px;
-      font-weight: bold;
-      display: none;
-      text-align: center;
-    }
-
-    tr.selected {
-      background-color: #B9D2ED !important;
+    @media (max-width: 500px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Art Gallery</h1>
+  </header>
 
-  <div class="container">
-    <h2>Sales Program</h2>
-    <input type="text" id="productCodeInput" placeholder="Enter product code or scan barcode" autofocus />
-    <div style="margin-bottom:20px;">
-      <button id="addBtn">Add</button>
-      <button id="returnBtn">Return Product</button>
-      <button id="resetBtn">Reset</button>
-    </div>
+  <main>
+    <section class="gallery-container">
+      <article class="art-card">
+        <img
+          class="art-image"
+          src="https://images.unsplash.com/photo-1504198453319-5ce911bafcde?auto=format&fit=crop&w=800&q=80"
+          alt="Abstract Painting"
+        />
+        <div class="art-info">
+          <h2 class="art-title">Colors of Emotion</h2>
+          <p class="art-artist">by Jane Doe</p>
+          <p class="art-description">
+            An abstract expressionist piece that explores the depth of human feelings through vibrant colors.
+          </p>
+        </div>
+      </article>
 
-    <div id="notFoundMsg" class="not-found">Product not found!</div>
+      <article class="art-card">
+        <img
+          class="art-image"
+          src="https://images.unsplash.com/photo-1529101091764-c3526daf38fe?auto=format&fit=crop&w=800&q=80"
+          alt="Modern Sculpture"
+        />
+        <div class="art-info">
+          <h2 class="art-title">Eternal Flow</h2>
+          <p class="art-artist">by Michael Smith</p>
+          <p class="art-description">
+            A contemporary sculpture symbolizing the continuous flow and change of life.
+          </p>
+        </div>
+      </article>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Product Name</th>
-          <th>Code</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Production Date</th>
-          <th>Expiration Date</th>
-          <th>Total (dinnar)</th>
-        </tr>
-      </thead>
-      <tbody id="cartBody">
-        <!-- Products will be added here -->
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="6">Grand Total:</td>
-          <td id="grandTotal">0 dinnar</td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
+      <article class="art-card">
+        <img
+          class="art-image"
+          src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=800&q=80"
+          alt="Landscape Painting"
+        />
+        <div class="art-info">
+          <h2 class="art-title">Morning Serenity</h2>
+          <p class="art-artist">by Emily Clark</p>
+          <p class="art-description">
+            A peaceful landscape capturing the calmness of early morning light over the hills.
+          </p>
+        </div>
+      </article>
 
-  <script>
-    const pdt = [
-      { c: "1", n: "Milk 1L", pr: 1000, prod: "2/2/2025", exp: "2/2/2026" },
-      { c: "2", n: "Water 0.5L", pr: 250, prod: "2/2/2025", exp: "2/2/2026" },
-      { c: "3", n: "Pepsi 250 ml", pr: 500, prod: "2/2/2025", exp: "2/2/2026" },
-      { c: "", n: "Orange Juice 1L", pr: 1250, prod: "2/2/2025", exp: "2/2/2026" },
-    ];
+      <article class="art-card">
+        <img
+          class="art-image"
+          src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80"
+          alt="Street Art"
+        />
+        <div class="art-info">
+          <h2 class="art-title">Urban Vibes</h2>
+          <p class="art-artist">by Alex Turner</p>
+          <p class="art-description">
+            A vibrant street art piece reflecting the dynamic energy of city life.
+          </p>
+        </div>
+      </article>
+    </section>
+  </main>
 
-    let cart = [], sel = null;
-    const inp = document.getElementById("productCodeInput"),
-          body = document.getElementById("cartBody"),
-          totalEl = document.getElementById("grandTotal"),
-          nf = document.getElementById("notFoundMsg"),
-          retBtn = document.getElementById("returnBtn"),
-          rstBtn = document.getElementById("resetBtn"),
-          addBtn = document.getElementById("addBtn"),
-          fmt = n => n.toFixed(2);
-
-    const add = c => {
-      c = c.trim();
-      nf.style.display = "none";
-      const prd = pdt.find(x => x.c === c);
-      if (!prd) return nf.style.display = "block";
-      const e = cart.find(x => x.c === c);
-      if (e) {
-        e.q++;
-        e.t = e.pr * e.q;
-      } else {
-        cart.push({ c: prd.c, n: prd.n, pr: prd.pr, q: 1, t: prd.pr, prod: prd.prod, exp: prd.exp });
-      }
-      upd();
-    };
-
-    const upd = () => {
-      body.innerHTML = "";
-      let gt = 0;
-      cart.forEach(i => {
-        gt += i.t;
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${i.n}</td><td>${i.c}</td><td>${fmt(i.pr)}</td><td>${i.q}</td><td>${i.prod}</td><td>${i.exp}</td><td>${fmt(i.t)}</td>`;
-        tr.onclick = () => {
-          [...body.children].forEach(r => r.classList.remove("selected"));
-          tr.classList.add("selected");
-          sel = i.c;
-        };
-        body.appendChild(tr);
-      });
-      totalEl.textContent = fmt(gt) + " dinnar";
-      if (!cart.length) sel = null;
-    };
-
-    inp.onkeydown = e => {
-      if (e.key === "Enter" && inp.value) {
-        add(inp.value);
-        inp.value = "";
-      }
-    };
-
-    addBtn.onclick = () => {
-      if (inp.value.trim()) {
-        add(inp.value);
-        inp.value = "";
-        inp.focus();
-      }
-    };
-
-    retBtn.onclick = () => {
-      if (!sel) return alert("Please select a product to return!");
-      const i = cart.findIndex(x => x.c === sel);
-      if (i === -1) return;
-      if (cart[i].q > 1) {
-        cart[i].q--;
-        cart[i].t = cart[i].pr * cart[i].q;
-      } else {
-        cart.splice(i, 1);
-        sel = null;
-      }
-      upd();
-    };
-
-    rstBtn.onclick = () => {
-      cart = [];
-      sel = null;
-      upd();
-    };
-  </script>
-
+  <footer>
+    &copy; 2025 Art Gallery. All rights reserved.
+  </footer>
 </body>
 </html>
