@@ -1,0 +1,213 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sales Program - Automatic Product Adding and Return</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f7f7f7;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ff;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Return Product Button (Orange) */
+    button#returnBtn {
+      font-weight: bold;
+      background-color: #FF9800;
+    }
+    button#returnBtn:hover {
+      background-color: #FB8C00;
+    }
+
+    /* Reset Button (Gray) */
+    button#resetBtn {
+      font-weight: bold;
+      background-color: #BDBDBD;
+      color: #333;
+    }
+    button#resetBtn:hover {
+      background-color: #9E9E9E;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px 15px;
+      text-align: center;
+    }
+    th {
+      background-color: #333;
+      color: white;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    tfoot td {
+      font-weight: bold;
+      font-size: 18px;
+      text-align: right;
+      padding-right: 20px;
+    }
+    .not-found {
+      color: red;
+      margin-bottom: 16px;
+      font-weight: bold;
+      display: none;
+      text-align: center;
+    }
+    tr.selected {
+      background-color: #B9D2ED !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Sales Program</h2>
+    <input type="text" id="productCodeInput" placeholder="Enter product code or scan barcode" autofocus />
+    <div style="margin-bottom:20px;">
+      <button id="returnBtn">Return Product</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+
+    <div id="notFoundMsg" class="not-found">Product not found!</div>
+
+    <table>
+      <thead>
+        <tr>
+           <th>Product Name</th>
+            <th>Code</th>
+          <th>Price </th>
+          <th>Quantity</th>
+          <th>Production Date</th>
+          <th>Expiration Date</th>
+          <th>Total (dinnar)</th>
+          
+        </tr>
+      </thead>
+      <tbody id="cartBody">
+        <!-- Products will be added here -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6">Grand Total:</td>
+          <td id="grandTotal">0 dinnar</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+<script>
+const pdt = [
+  { c: "1", n: "Milk 1L", pr: 1000, prod: "2/2/2025", exp: "2/2/2026" },
+  { c: "2", n: "Water 0.5L", pr: 250, prod: "2/2/2025", exp: "2/2/2026" },
+  { c: "3", n: "Pepsi 250 ml", pr: 500, prod: "2/2/2025", exp: "2/2/2026" },
+  { c: "", n: "Orange Juice 1L", pr: 1250, prod: "2/2/2025", exp: "2/2/2026" },
+];
+
+let cart = [], sel = null;
+const inp = document.getElementById("productCodeInput"),
+  body = document.getElementById("cartBody"),
+  totalEl = document.getElementById("grandTotal"),
+  nf = document.getElementById("notFoundMsg"),
+  retBtn = document.getElementById("returnBtn"),
+  rstBtn = document.getElementById("resetBtn"),
+  fmt = n => n.toFixed(2);
+
+const add = c => {
+  c = c.trim();
+  nf.style.display = "none";
+  const prd = pdt.find(x => x.c === c);
+  if (!prd) return nf.style.display = "block";
+  const e = cart.find(x => x.c === c);
+  if (e) {
+    e.q++;
+    e.t = e.pr * e.q;
+  } else {
+    cart.push({ c: prd.c, n: prd.n, pr: prd.pr, q: 1, t: prd.pr, prod: prd.prod, exp: prd.exp });
+  }
+  upd();
+};
+
+const upd = () => {
+  body.innerHTML = "";
+  let gt = 0;
+  cart.forEach(i => {
+    gt += i.t;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${i.n}</td><td>${i.c}</td><td>${fmt(i.pr)}</td><td>${i.q}</td><td>${fmt(i.t)}</td><td>${i.prod}</td><td>${i.exp}</td>`;
+    tr.onclick = () => {
+      [...body.children].forEach(r => r.classList.remove("selected"));
+      tr.classList.add("selected");
+      sel = i.c;
+    };
+    body.appendChild(tr);
+  });
+  totalEl.textContent = fmt(gt) + " dinnar";
+  if (!cart.length) sel = null;
+};
+
+inp.onkeydown = e => {
+  if (e.key === "Enter" && inp.value) {
+    add(inp.value);
+    inp.value = "";
+  }
+};
+
+retBtn.onclick = () => {
+  if (!sel) return alert("Please select a product to return!");
+  const i = cart.findIndex(x => x.c === sel);
+  if (i === -1) return;
+  if (cart[i].q > 1) {
+    cart[i].q--;
+    cart[i].t = cart[i].pr * cart[i].q;
+  } else {
+    cart.splice(i, 1);
+    sel = null;
+  }
+  upd();
+};
+
+rstBtn.onclick = () => {
+  cart = [];
+  sel = null;
+  upd();
+};
+</script>
+
+</body>
+</html>
