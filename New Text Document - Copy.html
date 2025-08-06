@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -9,21 +8,18 @@
       padding: 30px;
       background-color: #f7f7f7;
     }
-
     .container {
       max-width: 800px;
       margin: auto;
-      background: #fff;
+      background: #ff;
       padding: 20px 30px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-
     h2 {
       text-align: center;
       margin-bottom: 20px;
     }
-
     input {
       width: 100%;
       padding: 12px;
@@ -33,7 +29,6 @@
       box-sizing: border-box;
       margin-bottom: 10px;
     }
-
     button {
       padding: 10px 20px;
       margin-right: 10px;
@@ -43,15 +38,6 @@
       cursor: pointer;
       color: white;
       transition: background-color 0.3s ease;
-    }
-
-    /* Add Button (Green) */
-    button#addBtn {
-      font-weight: bold;
-      background-color: #4CAF50;
-    }
-    button#addBtn:hover {
-      background-color: #45A049;
     }
 
     /* Return Product Button (Orange) */
@@ -78,29 +64,24 @@
       border-collapse: collapse;
       margin-bottom: 15px;
     }
-
     th, td {
       border: 1px solid #ddd;
       padding: 12px 15px;
       text-align: center;
     }
-
     th {
       background-color: #333;
       color: white;
     }
-
     tbody tr:nth-child(even) {
       background-color: #f9f9f9;
     }
-
     tfoot td {
       font-weight: bold;
       font-size: 18px;
       text-align: right;
       padding-right: 20px;
     }
-
     .not-found {
       color: red;
       margin-bottom: 16px;
@@ -108,7 +89,6 @@
       display: none;
       text-align: center;
     }
-
     tr.selected {
       background-color: #B9D2ED !important;
     }
@@ -120,7 +100,6 @@
     <h2>Sales Program</h2>
     <input type="text" id="productCodeInput" placeholder="Enter product code or scan barcode" autofocus />
     <div style="margin-bottom:20px;">
-      <button id="addBtn">Add</button>
       <button id="returnBtn">Return Product</button>
       <button id="resetBtn">Reset</button>
     </div>
@@ -130,13 +109,14 @@
     <table>
       <thead>
         <tr>
-          <th>Product Name</th>
-          <th>Code</th>
-          <th>Price</th>
+           <th>Product Name</th>
+            <th>Code</th>
+          <th>Price </th>
           <th>Quantity</th>
           <th>Production Date</th>
           <th>Expiration Date</th>
           <th>Total (dinnar)</th>
+          
         </tr>
       </thead>
       <tbody id="cartBody">
@@ -151,92 +131,83 @@
     </table>
   </div>
 
-  <script>
-    const pdt = [
-      { c: "1", n: "Milk 1L", pr: 1000, prod: "2/2/2025", exp: "2/2/2026" },
-      { c: "2", n: "Water 0.5L", pr: 250, prod: "2/2/2025", exp: "2/2/2026" },
-      { c: "3", n: "Pepsi 250 ml", pr: 500, prod: "2/2/2025", exp: "2/2/2026" },
-      { c: "", n: "Orange Juice 1L", pr: 1250, prod: "2/2/2025", exp: "2/2/2026" },
-    ];
+<script>
+const pdt = [
+  { c: "1", n: "Milk 1L", pr: 1000, prod: "2/2/2025", exp: "2/2/2026" },
+  { c: "2", n: "Water 0.5L", pr: 250, prod: "2/2/2025", exp: "2/2/2026" },
+  { c: "3", n: "Pepsi 250 ml", pr: 500, prod: "2/2/2025", exp: "2/2/2026" },
+  { c: "", n: "Orange Juice 1L", pr: 1250, prod: "2/2/2025", exp: "2/2/2026" },
+];
 
-    let cart = [], sel = null;
-    const inp = document.getElementById("productCodeInput"),
-          body = document.getElementById("cartBody"),
-          totalEl = document.getElementById("grandTotal"),
-          nf = document.getElementById("notFoundMsg"),
-          retBtn = document.getElementById("returnBtn"),
-          rstBtn = document.getElementById("resetBtn"),
-          addBtn = document.getElementById("addBtn"),
-          fmt = n => n.toFixed(2);
+let cart = [], sel = null;
+const inp = document.getElementById("productCodeInput"),
+  body = document.getElementById("cartBody"),
+  totalEl = document.getElementById("grandTotal"),
+  nf = document.getElementById("notFoundMsg"),
+  retBtn = document.getElementById("returnBtn"),
+  rstBtn = document.getElementById("resetBtn"),
+  fmt = n => n.toFixed(2);
 
-    const add = c => {
-      c = c.trim();
-      nf.style.display = "none";
-      const prd = pdt.find(x => x.c === c);
-      if (!prd) return nf.style.display = "block";
-      const e = cart.find(x => x.c === c);
-      if (e) {
-        e.q++;
-        e.t = e.pr * e.q;
-      } else {
-        cart.push({ c: prd.c, n: prd.n, pr: prd.pr, q: 1, t: prd.pr, prod: prd.prod, exp: prd.exp });
-      }
-      upd();
+const add = c => {
+  c = c.trim();
+  nf.style.display = "none";
+  const prd = pdt.find(x => x.c === c);
+  if (!prd) return nf.style.display = "block";
+  const e = cart.find(x => x.c === c);
+  if (e) {
+    e.q++;
+    e.t = e.pr * e.q;
+  } else {
+    cart.push({ c: prd.c, n: prd.n, pr: prd.pr, q: 1, t: prd.pr, prod: prd.prod, exp: prd.exp });
+  }
+  upd();
+};
+
+const upd = () => {
+  body.innerHTML = "";
+  let gt = 0;
+  cart.forEach(i => {
+    gt += i.t;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${i.n}</td><td>${i.c}</td><td>${fmt(i.pr)}</td><td>${i.q}</td><td>${fmt(i.t)}</td><td>${i.prod}</td><td>${i.exp}</td>`;
+    tr.onclick = () => {
+      [...body.children].forEach(r => r.classList.remove("selected"));
+      tr.classList.add("selected");
+      sel = i.c;
     };
+    body.appendChild(tr);
+  });
+  totalEl.textContent = fmt(gt) + " dinnar";
+  if (!cart.length) sel = null;
+};
 
-    const upd = () => {
-      body.innerHTML = "";
-      let gt = 0;
-      cart.forEach(i => {
-        gt += i.t;
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${i.n}</td><td>${i.c}</td><td>${fmt(i.pr)}</td><td>${i.q}</td><td>${i.prod}</td><td>${i.exp}</td><td>${fmt(i.t)}</td>`;
-        tr.onclick = () => {
-          [...body.children].forEach(r => r.classList.remove("selected"));
-          tr.classList.add("selected");
-          sel = i.c;
-        };
-        body.appendChild(tr);
-      });
-      totalEl.textContent = fmt(gt) + " dinnar";
-      if (!cart.length) sel = null;
-    };
+inp.onkeydown = e => {
+  if (e.key === "Enter" && inp.value) {
+    add(inp.value);
+    inp.value = "";
+  }
+};
 
-    inp.onkeydown = e => {
-      if (e.key === "Enter" && inp.value) {
-        add(inp.value);
-        inp.value = "";
-      }
-    };
+retBtn.onclick = () => {
+  if (!sel) return alert("Please select a product to return!");
+  const i = cart.findIndex(x => x.c === sel);
+  if (i === -1) return;
+  if (cart[i].q > 1) {
+    cart[i].q--;
+    cart[i].t = cart[i].pr * cart[i].q;
+  } else {
+    cart.splice(i, 1);
+    sel = null;
+  }
+  upd();
+};
 
-    addBtn.onclick = () => {
-      if (inp.value.trim()) {
-        add(inp.value);
-        inp.value = "";
-        inp.focus();
-      }
-    };
-
-    retBtn.onclick = () => {
-      if (!sel) return alert("Please select a product to return!");
-      const i = cart.findIndex(x => x.c === sel);
-      if (i === -1) return;
-      if (cart[i].q > 1) {
-        cart[i].q--;
-        cart[i].t = cart[i].pr * cart[i].q;
-      } else {
-        cart.splice(i, 1);
-        sel = null;
-      }
-      upd();
-    };
-
-    rstBtn.onclick = () => {
-      cart = [];
-      sel = null;
-      upd();
-    };
-  </script>
+rstBtn.onclick = () => {
+  cart = [];
+  sel = null;
+  upd();
+};
+</script>
 
 </body>
 </html>
